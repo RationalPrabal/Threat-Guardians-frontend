@@ -105,6 +105,7 @@ export function CreateQuizzModal({ getQuizzes }) {
                     handleQuestionChange(index, "question", e.target.value)
                   }
                 />
+                <br></br>
                 {question.answers.map((answer, ansIndex) => (
                   <input
                     key={ansIndex}
@@ -124,7 +125,7 @@ export function CreateQuizzModal({ getQuizzes }) {
                 >
                   <option value="">Choose correct option</option>
                   {question.answers.map((_, ansIndex) => (
-                    <option key={ansIndex} value={ansIndex}>
+                    <option key={ansIndex} value={ansIndex + 1}>
                       Option {ansIndex + 1}
                     </option>
                   ))}
@@ -133,13 +134,13 @@ export function CreateQuizzModal({ getQuizzes }) {
             ))}
             <button
               onClick={addQuestion}
-              className="bg-green-500 text-white text-bold p-3 disabled:cursor-not-allowed"
+              className="bg-[#475569] text-white text-bold p-3 disabled:cursor-not-allowed mt-8"
             >
               Add Question
             </button>
             <button
               onClick={postQuiz}
-              className="bg-green-500 text-white text-bold p-3 disabled:cursor-not-allowed"
+              className="bg-[#475569] text-white text-bold p-3 disabled:cursor-not-allowed mt-8"
             >
               Add Quiz
             </button>

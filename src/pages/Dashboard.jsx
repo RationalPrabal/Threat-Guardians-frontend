@@ -7,11 +7,17 @@ import Quiz from "react-quiz-component";
 import { CreateQuizzModal } from "../components/CreateQuizzModal";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useToast } from "@chakra-ui/react";
+import { useContext } from "react";
+import { AuthContext } from "../context/Auth.Context";
+import Profile from "../components/Profile";
 export default function Dashboard() {
   const [lectures, setLectures] = useState([]);
   const [students, setStudents] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
+
+  const { show, user, getUser } = useContext(AuthContext);
   const toast = useToast();
+  const quizzIds = user?.completedQuizzes.map((el) => el._id);
   const getLectures = async () => {
     const headers = {
       Authorization: localStorage.getItem("token"),
@@ -71,6 +77,55 @@ export default function Dashboard() {
     }
     getQuizzes();
   };
+  const completeQuiz = async (id, quizId, obj, quizTitle) => {
+    if (
+      obj.numberOfCorrectAnswers + obj.numberOfIncorrectAnswers !==
+      obj.numberOfQuestions
+    ) {
+      return;
+    }
+    if (user.role === "admin") {
+      return;
+    }
+    let completedQuizzes;
+    let isExists = user.completedQuizzes.filter((el) => el._id === quizId);
+    let afterMap = user.completedQuizzes.map((el) => {
+      if (el._id === quizId) {
+        el.score = Math.max(el.score, obj.correctPoints);
+      }
+      return el;
+    });
+    console.log(afterMap);
+    if (isExists.length > 0) {
+      completedQuizzes = afterMap;
+    } else {
+      completedQuizzes = [
+        ...user.completedQuizzes,
+        { quizTitle, score: obj.correctPoints, _id: quizId },
+      ];
+    }
+
+    const headers = {
+      Authorization: localStorage.getItem("token"),
+    };
+    try {
+      await axios.patch(
+        `http://localhost:4500/users/update/${id}`,
+        {
+          completedQuizzes,
+        },
+        {
+          headers,
+        }
+      );
+      toast({
+        title: "Quiz completed successfully",
+        description: `Your Score: ${obj.correctPoints}`,
+        status: "success",
+      });
+    } catch (error) {}
+    getUser();
+  };
   useEffect(() => {
     getLectures();
     getStudents();
@@ -79,34 +134,78 @@ export default function Dashboard() {
 
   return (
     <div>
-      <p className="text-xl font-bold bg-slate-600 text-white mt-10">
-        {" "}
-        Lectures List
-      </p>
-      <CreateModal getLectures={getLectures} />
-      {lectures.map((el) => (
-        <SingleLecture key={el._id} {...el} getLectures={getLectures} />
-      ))}
-      <p className="text-xl font-bold bg-slate-600 text-white mt-12">
-        {" "}
-        Quizzes List
-      </p>
-      <CreateQuizzModal getQuizzes={getQuizzes} />
-      {quizzes.map((quiz) => (
-        <div className="shadow-lg py-4">
-          <Quiz quiz={quiz} />
-          <RiDeleteBin5Line
-            className="text-red-500 cursor-pointer text-xl ml-6"
-            onClick={() => deleteQuiz(quiz._id)}
-          />
-        </div>
-      ))}
-      <p className="text-xl font-bold bg-slate-600 text-white mt-12">
-        Students List
-      </p>
-      {students.map((el) => (
-        <SingleStudent key={el._id} {...el} />
-      ))}
+      {show === "Lectures" && (
+        <>
+          <p className="text-[26px] font-bold bg-slate-600 text-white px-4 mt-2">
+            {" "}
+            Lectures List
+          </p>
+          {user?.role === "admin" && <CreateModal getLectures={getLectures} />}
+          {lectures.map((el) => (
+            <SingleLecture key={el._id} {...el} getLectures={getLectures} />
+          ))}
+        </>
+      )}
+      {show === "Quizzes" && (
+        <>
+          <p className="text-[26px] font-bold bg-slate-600 text-white px-4 mt-2">
+            {" "}
+            Quizzes List
+          </p>
+          {user?.role === "admin" && (
+            <CreateQuizzModal getQuizzes={getQuizzes} />
+          )}
+          {quizzes.map((quiz) => (
+            <div className="shadow-lg py-4">
+              <Quiz
+                quiz={quiz}
+                onComplete={(obj) =>
+                  completeQuiz(user._id, quiz._id, obj, quiz.quizTitle)
+                }
+              />
+              {user?.role === "admin" && (
+                <RiDeleteBin5Line
+                  className="text-red-500 cursor-pointer text-xl ml-6"
+                  onClick={() => deleteQuiz(quiz._id)}
+                />
+              )}
+              {user?.role === "student" && (
+                <div>
+                  {quizzIds.includes(quiz._id) ? (
+                    <div className="bg-green-400 font-bold p-2">
+                      Hurray 🥳 !! You have already completed the Quiz
+                    </div>
+                  ) : (
+                    <div className="bg-red-300 p-2 font-bold">
+                      You have not completed the quiz yet!
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </>
+      )}
+
+      {show === "Students" && (
+        <>
+          <p className="text-[26px] font-bold bg-slate-600 text-white px-4 mt-2">
+            Students List
+          </p>
+          {students.map((el) => (
+            <SingleStudent key={el._id} {...el} />
+          ))}
+        </>
+      )}
+
+      {show === "Profile" && (
+        <>
+          <p className="text-[26px] font-bold bg-slate-600 text-white px-4 mt-2">
+            Profile & Reports
+          </p>
+          <Profile />
+        </>
+      )}
     </div>
   );
 }

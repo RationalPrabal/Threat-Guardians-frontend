@@ -8,6 +8,7 @@ export default function SingleStudent({
   enrolledAt,
   blocked,
   _id,
+  getStudents,
 }) {
   const toast = useToast();
   const BlockFunction = async (id, status) => {
@@ -17,7 +18,7 @@ export default function SingleStudent({
       };
 
       await axios.patch(
-        `http://localhost:4500/users/update/${id}`,
+        `${process.env.REACT_APP_BASE_URL}/users/update/${id}`,
         {
           blocked: status,
         },
@@ -47,6 +48,7 @@ export default function SingleStudent({
         });
       }
     }
+    getStudents();
   };
   return (
     <div className="shadow-lg py-4">

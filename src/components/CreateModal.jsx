@@ -11,6 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { MdAddCircleOutline } from "react-icons/md";
 import axios from "axios";
+import DottedLoader from "./Loader";
 
 export function CreateModal({ getLectures }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -19,6 +20,7 @@ export function CreateModal({ getLectures }) {
     content: "",
     text: "",
   });
+  const [loader, setLoader] = useState(false);
   const [selected, setSelected] = useState("");
   const toast = useToast();
   const postLecture = async () => {
@@ -26,9 +28,13 @@ export function CreateModal({ getLectures }) {
       const headers = {
         Authorization: localStorage.getItem("token"),
       };
-      await axios.post("http://localhost:4500/lectures/create", data, {
-        headers,
-      });
+      await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/lectures/create`,
+        data,
+        {
+          headers,
+        }
+      );
       toast({
         title: "Lecture created",
         status: "success",
@@ -42,6 +48,7 @@ export function CreateModal({ getLectures }) {
     getLectures();
   };
   const getURL = async () => {
+    setLoader(true);
     try {
       let fileData = new FormData();
       fileData.append("file", selected);
@@ -63,6 +70,7 @@ export function CreateModal({ getLectures }) {
         });
       }
     } catch (error) {}
+    setLoader(false);
   };
   useEffect(() => {
     getURL();
@@ -93,13 +101,17 @@ export function CreateModal({ getLectures }) {
                 onChange={(e) => setData({ ...data, title: e.target.value })}
               />
             </div>
-            <div className="flex justify-between font-bold">
-              <span>Content</span>-
-              <input
-                type="file"
-                onChange={(e) => setSelected(e.target.files[0])}
-              />
-            </div>
+            {loader ? (
+              <DottedLoader />
+            ) : (
+              <div className="flex justify-between font-bold">
+                <span>Content</span>-
+                <input
+                  type="file"
+                  onChange={(e) => setSelected(e.target.files[0])}
+                />
+              </div>
+            )}
             <div className="flex justify-between font-bold">
               <span>Text Content</span>
               -

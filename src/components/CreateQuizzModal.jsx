@@ -53,9 +53,13 @@ export function CreateQuizzModal({ getQuizzes }) {
         Authorization: localStorage.getItem("token"),
       };
 
-      await axios.post("http://localhost:4500/quizzes/create", data, {
-        headers,
-      });
+      await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/quizzes/create`,
+        data,
+        {
+          headers,
+        }
+      );
       toast({
         title: "Quiz created",
         status: "success",

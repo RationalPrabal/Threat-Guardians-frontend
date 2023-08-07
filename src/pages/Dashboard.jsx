@@ -10,6 +10,7 @@ import { useToast } from "@chakra-ui/react";
 import { useContext } from "react";
 import { AuthContext } from "../context/Auth.Context";
 import Profile from "../components/Profile";
+
 export default function Dashboard() {
   const [lectures, setLectures] = useState([]);
   const [students, setStudents] = useState([]);
@@ -23,9 +24,12 @@ export default function Dashboard() {
       Authorization: localStorage.getItem("token"),
     };
     try {
-      let response = await axios.get("http://localhost:4500/lectures/", {
-        headers,
-      });
+      let response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/lectures/`,
+        {
+          headers,
+        }
+      );
       setLectures(response.data);
     } catch (error) {
       console.log("can not get lectures");
@@ -36,9 +40,12 @@ export default function Dashboard() {
       Authorization: localStorage.getItem("token"),
     };
     try {
-      let response = await axios.get("http://localhost:4500/users/", {
-        headers,
-      });
+      let response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/users/`,
+        {
+          headers,
+        }
+      );
       setStudents(response.data);
     } catch (error) {
       console.log("can not get students");
@@ -49,9 +56,12 @@ export default function Dashboard() {
       Authorization: localStorage.getItem("token"),
     };
     try {
-      let response = await axios.get("http://localhost:4500/quizzes/", {
-        headers,
-      });
+      let response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/quizzes/`,
+        {
+          headers,
+        }
+      );
       setQuizzes(response.data);
     } catch (error) {
       console.log("can not get quizzes");
@@ -62,9 +72,12 @@ export default function Dashboard() {
       Authorization: localStorage.getItem("token"),
     };
     try {
-      await axios.delete(`http://localhost:4500/quizzes/delete/${id}`, {
-        headers,
-      });
+      await axios.delete(
+        `${process.env.REACT_APP_BASE_URL}/quizzes/delete/${id}`,
+        {
+          headers,
+        }
+      );
       toast({
         title: "Quizz Deleted",
         status: "success",
@@ -110,7 +123,7 @@ export default function Dashboard() {
     };
     try {
       await axios.patch(
-        `http://localhost:4500/users/update/${id}`,
+        `${process.env.REACT_APP_BASE_URL}/users/update/${id}`,
         {
           completedQuizzes,
         },
@@ -193,7 +206,7 @@ export default function Dashboard() {
             Students List
           </p>
           {students.map((el) => (
-            <SingleStudent key={el._id} {...el} />
+            <SingleStudent key={el._id} {...el} getStudents={getStudents} />
           ))}
         </>
       )}

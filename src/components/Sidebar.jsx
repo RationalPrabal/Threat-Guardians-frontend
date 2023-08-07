@@ -8,7 +8,7 @@ import { AuthContext } from "../context/Auth.Context";
 import axios from "axios";
 
 export default function Navbar() {
-  const { setShow, setAuth, setUser, getUser } = useContext(AuthContext);
+  const { setShow, setAuth, user, getUser } = useContext(AuthContext);
 
   if (localStorage.getItem("token")) {
     setAuth(true);
@@ -47,16 +47,20 @@ export default function Navbar() {
             <MdOutlineQuiz className="text-xl text-blue-500 mr-2" /> Quizzes
           </div>
         </MenuItem>
-        <MenuItem onClick={() => setShow("Students")}>
-          <div className="flex">
-            <PiStudent className="text-xl text-blue-500 mr-2" /> Students{" "}
-          </div>
-        </MenuItem>
-        <MenuItem onClick={() => setShow("Profile")}>
-          <div className="flex">
-            <FiUserCheck className="text-xl text-blue-500 mr-2" /> Profile{" "}
-          </div>
-        </MenuItem>
+        {user?.role === "admin" && (
+          <MenuItem onClick={() => setShow("Students")}>
+            <div className="flex">
+              <PiStudent className="text-xl text-blue-500 mr-2" /> Students{" "}
+            </div>
+          </MenuItem>
+        )}
+        {user?.role === "student" && (
+          <MenuItem onClick={() => setShow("Profile")}>
+            <div className="flex">
+              <FiUserCheck className="text-xl text-blue-500 mr-2" /> Profile{" "}
+            </div>
+          </MenuItem>
+        )}
         <MenuItem onClick={() => Logout()}>
           <div className="flex">
             <CiLogout className="text-xl text-red-500 mr-2" /> LogOut{" "}

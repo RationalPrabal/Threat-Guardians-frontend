@@ -14,7 +14,7 @@ export default function SingleLecture({
   getLectures,
 }) {
   const { user, getUser } = useContext(AuthContext);
-
+  console.log(user);
   let lecture = {
     title,
     content,
@@ -31,7 +31,7 @@ export default function SingleLecture({
     };
     try {
       await axios.patch(
-        `http://localhost:4500/users/update/${id}`,
+        `${process.env.REACT_APP_BASE_URL}/users/update/${id}`,
         {
           watched,
         },

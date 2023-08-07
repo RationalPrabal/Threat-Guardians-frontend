@@ -19,9 +19,12 @@ export function DeleteModal({ _id, getLectures }) {
       Authorization: localStorage.getItem("token"),
     };
     try {
-      await axios.delete(`http://localhost:4500/lectures/delete/${id}`, {
-        headers,
-      });
+      await axios.delete(
+        `${process.env.REACT_APP_BASE_URL}/lectures/delete/${id}`,
+        {
+          headers,
+        }
+      );
       toast({
         title: "Lecture Deleted",
         status: "success",

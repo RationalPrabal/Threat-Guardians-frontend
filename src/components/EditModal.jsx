@@ -54,9 +54,13 @@ export function EditModal({ lecture, getLectures }) {
       Authorization: localStorage.getItem("token"),
     };
     try {
-      await axios.patch(`http://localhost:4500/lectures/update/${id}`, data, {
-        headers,
-      });
+      await axios.patch(
+        `${process.env.REACT_APP_BASE_URL}/lectures/update/${id}`,
+        data,
+        {
+          headers,
+        }
+      );
       toast({
         title: "Lecture updated",
         status: "success",

@@ -35,7 +35,7 @@ export default function Login() {
   const loginFunction = async () => {
     try {
       let response = await axios.post(
-        "http://localhost:4500/users/login",
+        `${process.env.REACT_APP_BASE_URL}/users/login`,
         cred
       );
       localStorage.setItem("token", response.data.token);
@@ -45,6 +45,7 @@ export default function Login() {
         title: "Login Successful",
         status: "success",
         duration: 4000,
+        position: "bottom-left",
         isClosable: true,
       });
       nav("/");
@@ -56,6 +57,7 @@ export default function Login() {
           description: "Contact the institute",
           status: "error",
           duration: 4000,
+          position: "bottom-left",
           isClosable: true,
         });
       } else if (error.response.status === 401) {
@@ -63,6 +65,7 @@ export default function Login() {
           title: "Invalid password",
           status: "error",
           duration: 4000,
+          position: "bottom-left",
           isClosable: true,
         });
       } else
@@ -70,6 +73,7 @@ export default function Login() {
           title: "Can not Login",
           status: "error",
           duration: 4000,
+          position: "bottom-left",
           isClosable: true,
         });
     }
@@ -148,17 +152,6 @@ export default function Login() {
                     Please Wait....
                   </Button>
                 )}
-                <p>
-                  Don't have an account? SignUP from{" "}
-                  <span
-                    onClick={() => {
-                      nav("/signup");
-                    }}
-                    className="text-blue-600 underline font-bold "
-                  >
-                    Here
-                  </span>
-                </p>
               </Stack>
             </Stack>
           </Box>

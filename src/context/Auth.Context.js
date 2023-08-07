@@ -8,7 +8,7 @@ export default function AuthContextProvider({children}) {
     const getUser = async () => {
       let id = localStorage.getItem("userId");
       try {
-        let user = await axios.get(`http://localhost:4500/users/${id}`);
+        let user = await axios.get(`${process.env.REACT_APP_BASE_URL}/users/${id}`);
         setUser(user.data);
       } catch (error) {}
     };

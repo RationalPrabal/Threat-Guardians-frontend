@@ -1,4 +1,4 @@
-# Getting Started with Learning Management System
+# Getting Started with Learning Management System 🥳
 
 ## Available Scripts
 
@@ -10,7 +10,18 @@ Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
-You may also see any lint errors in the console.
+
+## Tech Stack 🚀
+
+### FrontEnd 
+React JS | Tailwind CSS | Chakra UI
+
+### Backend
+Node JS | Express JS 
+
+### Database
+MongoDB
+
 
 ## deployement 
 
@@ -45,6 +56,9 @@ password- peter@1273
 
 3. Students can see their performance and report card
 ![image](https://github.com/RationalPrabal/Threat-Guardians-frontend/assets/108731705/e47495a5-ce94-4204-80ff-26654b863511)
+
+
+
 
 
 

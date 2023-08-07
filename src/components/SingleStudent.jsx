@@ -11,7 +11,9 @@ export default function SingleStudent({
   getStudents,
 }) {
   const toast = useToast();
+  //! function for blocking or unblocking the user
   const BlockFunction = async (id, status) => {
+    //! if the user is blocked then send making blocked key false otherwise true and sending patch request for that particular user using his/her id
     try {
       const headers = {
         Authorization: localStorage.getItem("token"),

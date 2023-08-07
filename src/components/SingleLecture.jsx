@@ -14,7 +14,6 @@ export default function SingleLecture({
   getLectures,
 }) {
   const { user, getUser } = useContext(AuthContext);
-  console.log(user);
   let lecture = {
     title,
     content,
@@ -22,10 +21,21 @@ export default function SingleLecture({
     _id,
     text,
   };
-
+  //! If user is clicking over the lecture then update into the databse that user have watched the lecture
   const setWatchStatus = async (id) => {
+    //! if role is admin then return because watch history is not for admin
     if (user.role === "admin") return;
-    let watched = [...user.watched, _id];
+
+    let watched;
+
+    //! if student has watched the lecture then do not make the patch request
+    if (user.watched.includes(_id)) {
+      return;
+    }
+    //! including id of lecture being watched into watch history
+    else {
+      watched = [...user.watched, _id];
+    }
     const headers = {
       Authorization: localStorage.getItem("token"),
     };

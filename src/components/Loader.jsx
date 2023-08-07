@@ -1,6 +1,7 @@
 import React from "react";
 
 const DottedLoader = () => {
+  //! it is a custom loader
   return (
     <div className="flex items-center justify-center h-40">
       <div className="animate-spin">

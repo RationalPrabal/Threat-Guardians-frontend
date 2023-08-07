@@ -14,7 +14,9 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 export function DeleteModal({ _id, getLectures }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const deleteContact = async (id) => {
+
+  //! Deleting the lecture by capturing its id. Id is being sent as a parameter
+  const deleteLecture = async (id) => {
     const headers = {
       Authorization: localStorage.getItem("token"),
     };
@@ -54,7 +56,7 @@ export function DeleteModal({ _id, getLectures }) {
               <div className="flex justify-around mt-8">
                 <button
                   onClick={() => {
-                    deleteContact(_id);
+                    deleteLecture(_id);
                     onClose();
                   }}
                   className="bg-red-700 text-white rounded-md px-4 py-2"

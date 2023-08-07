@@ -23,6 +23,8 @@ export function CreateModal({ getLectures }) {
   const [loader, setLoader] = useState(false);
   const [selected, setSelected] = useState("");
   const toast = useToast();
+
+  //! Post request to the server to add the lecture in the database
   const postLecture = async () => {
     try {
       const headers = {
@@ -47,8 +49,12 @@ export function CreateModal({ getLectures }) {
     }
     getLectures();
   };
+
+  //! Hosting the lecture video on cloudinary and getting the link
   const getURL = async () => {
-    setLoader(true);
+    if (selected) {
+      setLoader(true);
+    }
     try {
       let fileData = new FormData();
       fileData.append("file", selected);
@@ -62,7 +68,6 @@ export function CreateModal({ getLectures }) {
       );
       xhr.send(fileData);
       const imageResponse = JSON.parse(xhr.responseText);
-      console.log(imageResponse.url);
       if (imageResponse.url) {
         setData({
           ...data,
@@ -72,9 +77,12 @@ export function CreateModal({ getLectures }) {
     } catch (error) {}
     setLoader(false);
   };
+
+  //! running the useEffect method whenever file is loaded to get the url
   useEffect(() => {
     getURL();
   }, [selected]);
+
   return (
     <>
       <div

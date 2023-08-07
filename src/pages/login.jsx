@@ -10,7 +10,6 @@ import {
   Button,
   Heading,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import axios from "axios";
@@ -32,7 +31,11 @@ export default function Login() {
   if (localStorage.getItem("token")) {
     setAuth(true);
   }
+  //! getting the credentials entered and making a post request for the server
+  //! if user exists in the database and if he/she is not blocked the a token will be sent from the server.
+  //! after getting the token the further communication bw server and client will happen through the token only
   const loginFunction = async () => {
+    setLoading(true);
     try {
       let response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/users/login`,
@@ -77,6 +80,7 @@ export default function Login() {
           isClosable: true,
         });
     }
+    setLoading(false);
   };
 
   if (isAuth) {

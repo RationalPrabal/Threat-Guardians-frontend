@@ -10,16 +10,21 @@ import { useToast } from "@chakra-ui/react";
 import { useContext } from "react";
 import { AuthContext } from "../context/Auth.Context";
 import Profile from "../components/Profile";
+import DottedLoader from "../components/Loader";
 
 export default function Dashboard() {
   const [lectures, setLectures] = useState([]);
   const [students, setStudents] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
-
+  const [loader, setLoader] = useState(false);
   const { show, user, getUser } = useContext(AuthContext);
   const toast = useToast();
+  //! making an array of quizz ids to check whether user has attempted it or not
   const quizzIds = user?.completedQuizzes.map((el) => el._id);
+
+  //! getting the lectures when page being mounted. token is being send in the headers to verfiry the authenticated user
   const getLectures = async () => {
+    setLoader(true);
     const headers = {
       Authorization: localStorage.getItem("token"),
     };
@@ -34,6 +39,7 @@ export default function Dashboard() {
     } catch (error) {
       console.log("can not get lectures");
     }
+    setLoader(false);
   };
   const getStudents = async () => {
     const headers = {
@@ -90,6 +96,8 @@ export default function Dashboard() {
     }
     getQuizzes();
   };
+
+  //! when user is completing the an object then this function is being invoked to register the user's score
   const completeQuiz = async (id, quizId, obj, quizTitle) => {
     if (
       obj.numberOfCorrectAnswers + obj.numberOfIncorrectAnswers !==
@@ -97,9 +105,11 @@ export default function Dashboard() {
     ) {
       return;
     }
+    //! if role is admin then return because quizz history is not for admin
     if (user.role === "admin") {
       return;
     }
+    //! if user has already attempted the quizz then compare the existing score and current score and then save max of them as new score
     let completedQuizzes;
     let isExists = user.completedQuizzes.filter((el) => el._id === quizId);
     let afterMap = user.completedQuizzes.map((el) => {
@@ -108,10 +118,12 @@ export default function Dashboard() {
       }
       return el;
     });
-    console.log(afterMap);
+
     if (isExists.length > 0) {
       completedQuizzes = afterMap;
-    } else {
+    }
+    //! if user is attempting it for the first time then simply add quizz's id , title and score into the databse
+    else {
       completedQuizzes = [
         ...user.completedQuizzes,
         { quizTitle, score: obj.correctPoints, _id: quizId },
@@ -139,6 +151,8 @@ export default function Dashboard() {
     } catch (error) {}
     getUser();
   };
+
+  //! when the page is first time being loaded then fetch all the required data
   useEffect(() => {
     getLectures();
     getStudents();
@@ -147,18 +161,23 @@ export default function Dashboard() {
 
   return (
     <div>
-      {show === "Lectures" && (
-        <>
-          <p className="text-[26px] font-bold bg-slate-600 text-white px-4 mt-2">
-            {" "}
-            Lectures List
-          </p>
-          {user?.role === "admin" && <CreateModal getLectures={getLectures} />}
-          {lectures.map((el) => (
-            <SingleLecture key={el._id} {...el} getLectures={getLectures} />
-          ))}
-        </>
-      )}
+      {show === "Lectures" &&
+        (!loader ? (
+          <>
+            <p className="text-[26px] font-bold bg-slate-600 text-white px-4 mt-2">
+              {" "}
+              Lectures List
+            </p>
+            {user?.role === "admin" && (
+              <CreateModal getLectures={getLectures} />
+            )}
+            {lectures.map((el) => (
+              <SingleLecture key={el._id} {...el} getLectures={getLectures} />
+            ))}
+          </>
+        ) : (
+          <DottedLoader />
+        ))}
       {show === "Quizzes" && (
         <>
           <p className="text-[26px] font-bold bg-slate-600 text-white px-4 mt-2">

@@ -36,7 +36,6 @@ export function EditModal({ lecture, getLectures }) {
       );
       xhr.send(fileData);
       const imageResponse = JSON.parse(xhr.responseText);
-      console.log(imageResponse.url);
       if (imageResponse.url) {
         setData({
           ...data,
@@ -48,7 +47,7 @@ export function EditModal({ lecture, getLectures }) {
   useEffect(() => {
     getURL();
   }, [selected]);
-
+  //! Editing the lecture by capturing its id. token is being sent as headers for authorization.
   const EditLecture = async (id) => {
     const headers = {
       Authorization: localStorage.getItem("token"),

@@ -26,13 +26,13 @@ export function CreateQuizzModal({ getQuizzes }) {
     updatedQuestions[index][field] = value;
     setData({ ...data, questions: updatedQuestions });
   };
-
+  //! when admin selecting anwer of the question
   const handleAnswerChange = (questionIndex, answerIndex, value) => {
     const updatedQuestions = [...data.questions];
     updatedQuestions[questionIndex].answers[answerIndex] = value;
     setData({ ...data, questions: updatedQuestions });
   };
-
+  //! whenever admin wants to add new questions. Inputs are rendered dynamically
   const addQuestion = () => {
     const newQuestion = {
       question: "",
@@ -46,7 +46,7 @@ export function CreateQuizzModal({ getQuizzes }) {
     };
     setData({ ...data, questions: [...data.questions, newQuestion] });
   };
-
+  //! getting the token from localStorage and posting the quiz to the server
   const postQuiz = async () => {
     try {
       const headers = {

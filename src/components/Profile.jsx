@@ -5,7 +5,7 @@ import { BarChart } from "react-chartkick";
 import "chartkick/chart.js";
 export default function Profile() {
   const { user } = useContext(AuthContext);
-
+  //! student total quizz score
   let score = user?.completedQuizzes.reduce((acc, currentValue) => {
     return acc + currentValue.score;
   }, 0);

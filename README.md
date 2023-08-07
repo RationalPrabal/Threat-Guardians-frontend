@@ -1,7 +1,5 @@
 # Getting Started with Learning Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 ## Available Scripts
 
 In the project directory, you can run:
@@ -31,7 +29,7 @@ password- Fw21_1273
 
 ### Student Side 
 1. Students can watch the  lectures and attempt the quizzes
-2. Students can see the their performance and report card
+2. Students can see their performance and report card
 
-Email - peter.com
+Email - peter@gmail.com
 password- peter@1273
